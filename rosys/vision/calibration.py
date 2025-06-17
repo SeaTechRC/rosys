@@ -270,7 +270,7 @@ class Calibration:
             world_array = self.project_from_image(image_array, target_height=target_height)
             return [Point3d(x=point[0], y=point[1], z=point[2]) if not np.isnan(point).any() else None for point in world_array]
 
-        world_extrinsics = self.extrinsics.resolve(frame)
+        world_extrinsics = self.extrinsics.transform_with(frame.resolve())
         image_rays = self._points_to_rays(image_coordinates.astype(np.float64).reshape(-1, 1, 2))
         objPoints = image_rays @ world_extrinsics.rotation.matrix.T
         Z = world_extrinsics.z
