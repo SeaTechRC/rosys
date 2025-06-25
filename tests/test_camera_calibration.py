@@ -227,6 +227,23 @@ def test_projection_from_one_frame_into_world_frame():
         assert world_point_ is not None
         assert np.allclose(world_point.tuple, world_point_.tuple, atol=1e-6)
 
+def test_projection_from_saved_pose_to_image_and_from_image():
+    cam, world_points = demo_data()
+    assert cam.calibration is not None
+
+    frame_registry.clear()
+    cam_frame = Pose3d(x=2.0, y=-1.0, z=0.0).as_frame('cam')
+    cam.calibration.extrinsics.in_frame(cam_frame)
+    image_cam_frame = Pose3d(x=1.0, y=-0.5, z=0.0)
+
+    # transform world points into image cam frame
+    world_points_in_image_frame = [p.relative_to(image_cam_frame) for p in world_points]
+
+    for world_point, image_frame_point in zip(world_points, world_points_in_image_frame, strict=True):
+        image_point_from_frame = cam.calibration.project_to_image(world_point, frame=image_cam_frame)
+        assert image_point_from_frame is not None
+        world_point_from_image_point = cam.calibration.project_from_image(image_point_from_frame, frame=image_cam_frame)
+        assert np.allclose(world_point.tuple, world_point_from_image_point.tuple, atol=1e-6)
 
 def test_fisheye_projection():
     cam, world_points = demo_fisheye_data()
