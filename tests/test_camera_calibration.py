@@ -236,10 +236,7 @@ def test_projection_from_saved_pose_to_image_and_from_image():
     cam.calibration.extrinsics.in_frame(cam_frame)
     image_cam_frame = Pose3d(x=1.0, y=-0.5, z=0.0)
 
-    # transform world points into image cam frame
-    world_points_in_image_frame = [p.relative_to(image_cam_frame) for p in world_points]
-
-    for world_point, image_frame_point in zip(world_points, world_points_in_image_frame, strict=True):
+    for world_point in world_points:
         image_point_from_frame = cam.calibration.project_to_image(world_point, frame=image_cam_frame)
         assert image_point_from_frame is not None
         world_point_from_image_point = cam.calibration.project_from_image(image_point_from_frame, frame=image_cam_frame)
