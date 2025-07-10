@@ -12,6 +12,7 @@ import PIL.ImageDraw
 from typing_extensions import Self
 
 from .. import rosys
+from ..geometry import Pose3d
 from .detections import Detections
 
 
@@ -31,7 +32,7 @@ class Image:
     size: ImageSize
     time: float  # time of recording
     data: bytes | None = None
-    pose: rosys.geometry.Pose3d | None = None # Pose from which the image has been taken
+    pose: Pose3d | None = None # Pose from which the image has been taken
     _detections: dict[str, Detections] = field(default_factory=dict)
     is_broken: bool | None = None
     tags: set[str] = field(default_factory=set)
