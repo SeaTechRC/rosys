@@ -93,9 +93,7 @@ def time() -> float:
     if is_test:
         return _state.time
     with time_lock:
-        now = pytime.time()
-        _state.time += (now - _state.last_time_request) * config.simulation_speed
-        _state.last_time_request = now
+        _state.time = pytime.time()
         return _state.time
 
 
